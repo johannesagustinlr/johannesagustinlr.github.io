@@ -1,28 +1,310 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Johannes Agustin L R - Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- React & Babel -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
-    <title>Johannes Agustin</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <style>
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .glass-card {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 0.5rem;
+        }
+        .skill-badge {
+            padding: 0.125rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-radius: 9999px;
+            border: 1px solid #30363d;
+            background-color: #21262d;
+            color: #58a6ff;
+        }
+        .border-bottom {
+            border-bottom: 1px solid #30363d;
+        }
+        /* Simple fade-in animation */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 <body>
-    <section class="intro">
-        <div class="inner">
-            <div class="content">
-                <h1>About Me</h1>
-                
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const CV_DATA = {
+            name: "Johannes Agustin L R",
+            title: "Software Developer",
+            email: "johannesagustinlr@gmail.com",
+            github: "https://github.com/johannesagustinlr/",
+            phone: "+6281510834347",
+            location: "Batam, Indonesia",
+            summary: "I am a passionate software developer with expertise in Python, API integrations, and RPA development. Skilled in building scalable applications, debugging, and optimizing software performance. Experienced in working remotely with international teams to deliver impactful solutions. Adept at improving existing applications and creating proof-of-concept prototypes.",
+            experience: [
+                {
+                    role: "IT Developer",
+                    company: "PT. BANGUN ASIA PERKASA",
+                    location: "Batam",
+                    period: "2025 - Now",
+                    points: [
+                        "Develop and customize Odoo modules using Python and XML.",
+                        "Integrate and implement Odoo modules (Sales, Inventory, Accounting, etc).",
+                        "Troubleshoot, debug, and maintain Odoo applications.",
+                        "Manage PostgreSQL databases and create custom reports."
+                    ]
+                },
+                {
+                    role: "Python Developer",
+                    company: "PT. EWOPOS SOLUSI INDONESIA (EDGEWORKS SOLUTION)",
+                    location: "Remote",
+                    period: "2023 - 2025",
+                    points: [
+                        "Developed integration systems with external web applications using APIs and SQL.",
+                        "Built robust and scalable software solutions in Python, leveraging FastAPI and n8n.",
+                        "Created unit tests using pytest, ensuring high code reliability.",
+                        "Developed reusable code libraries for optimized development workflows."
+                    ]
+                },
+                {
+                    role: "Software Engineer",
+                    company: "GLEE TREES PTE. LTD.",
+                    location: "Batam",
+                    period: "2019 - 2023",
+                    points: [
+                        "Developed RPA applications based on UI/UX designs using the Kivy Framework (Python GUI).",
+                        "Converted legacy RPA applications to modern versions using the Tkinter Framework.",
+                        "Assisted project and sales teams in developing proof-of-concept RPA solutions.",
+                        "Analyzed and enhanced existing applications, improving efficiency and performance."
+                    ]
+                },
+                {
+                    role: "ERP Technical Consultant",
+                    company: "TIGERNIX PTE LTD",
+                    location: "Batam",
+                    period: "2017 - 2019",
+                    points: [
+                        "Supported and maintained ERP web applications using Odoo (OpenERP Framework).",
+                        "Analyzed existing applications and recommended performance improvements.",
+                        "Deployed client web applications on Amazon Web Services (AWS)."
+                    ]
+                }
+            ],
+            skills: {
+                programming: ["Python", "FastAPI", "Django", "Flask", "Kivy", "Tkinter", "HTML", "CSS", "SQL", "XML"],
+                databases: ["PostgreSQL", "MsSQL"],
+                cloud: ["Amazon Web Services (AWS)"],
+                tools: ["RabbitMQ", "Git", "Subversion", "n8n", "pytest"],
+                specialized: ["Odoo", "OpenERP", "RPA Development", "ERP Systems"]
+            }
+        };
+
+        const Icon = ({ name, className }) => {
+            useEffect(() => {
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            }, []);
+            return <i data-lucide={name} className={className}></i>;
+        };
+
+        const SectionHeader = ({ icon, title }) => (
+            <div className="flex items-center gap-2 mb-4 pb-2 border-bottom">
+                <Icon name={icon} className="w-5 h-5 text-[#8b949e]" />
+                <h2 className="text-lg font-semibold text-[#c9d1d9]">{title}</h2>
             </div>
-            <p>
-                    I'm currently a Mechatronics engineering undergraduate student at Batam State Polytechnic. 
-                    I'm a software developer, and passionate about Machine learning, Web Development and IoT. 
+        );
 
-            </p>
-        </div>
+        const ExperienceCard = ({ exp }) => (
+            <div className="mb-8 relative pl-6 border-l border-[#30363d] fade-in">
+                <div className="absolute w-3 h-3 bg-[#30363d] rounded-full -left-[6.5px] top-1.5 border-2 border-[#0d1117]" />
+                <div className="flex flex-col md:flex-row md:items-center justify-between mb-2">
+                    <h3 className="text-md font-bold text-[#58a6ff]">{exp.role}</h3>
+                    <span className="text-xs font-mono text-[#8b949e]">{exp.period}</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-[#8b949e] mb-3">
+                    <span className="font-medium text-[#c9d1d9]">{exp.company}</span>
+                    <span>•</span>
+                    <span>{exp.location}</span>
+                </div>
+                <ul className="space-y-2">
+                    {exp.points.map((point, i) => (
+                        <li key={i} className="text-sm text-[#8b949e] flex gap-2">
+                            <Icon name="chevron-right" className="w-4 h-4 mt-0.5 flex-shrink-0 text-[#30363d]" />
+                            <span>{point}</span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        );
 
-    </section>
-    
+        function App() {
+            useEffect(() => {
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            }, []);
 
+            return (
+                <div className="min-h-screen max-w-6xl mx-auto px-4 py-12 md:py-20">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                        
+                        {/* Sidebar / Profile */}
+                        <aside className="lg:col-span-4">
+                            <div className="sticky top-12 fade-in">
+                                <div className="mb-6">
+                                    <div className="w-48 h-48 rounded-full border border-[#30363d] bg-[#161b22] mb-6 overflow-hidden flex items-center justify-center">
+                                        <Icon name="terminal" className="w-20 h-20 text-[#30363d]" />
+                                    </div>
+                                    <h1 className="text-2xl font-bold text-[#c9d1d9] mb-1">{CV_DATA.name}</h1>
+                                    <p className="text-xl text-[#8b949e] font-light">{CV_DATA.title}</p>
+                                </div>
 
+                                <div className="space-y-4 mb-8">
+                                    <p className="text-sm text-[#8b949e] leading-relaxed">
+                                        {CV_DATA.summary}
+                                    </p>
+                                </div>
 
-    
+                                <div className="space-y-3 text-sm">
+                                    <a href={`mailto:${CV_DATA.email}`} className="flex items-center gap-3 text-[#c9d1d9] hover:text-[#58a6ff] transition-colors">
+                                        <Icon name="mail" className="w-4 h-4 text-[#8b949e]" />
+                                        {CV_DATA.email}
+                                    </a>
+                                    <a href={CV_DATA.github} target="_blank" rel="noreferrer" className="flex items-center gap-3 text-[#c9d1d9] hover:text-[#58a6ff] transition-colors">
+                                        <Icon name="github" className="w-4 h-4 text-[#8b949e]" />
+                                        github.com/johannesagustinlr
+                                    </a>
+                                    <div className="flex items-center gap-3 text-[#c9d1d9]">
+                                        <Icon name="phone" className="w-4 h-4 text-[#8b949e]" />
+                                        {CV_DATA.phone}
+                                    </div>
+                                    <div className="flex items-center gap-3 text-[#c9d1d9]">
+                                        <Icon name="map-pin" className="w-4 h-4 text-[#8b949e]" />
+                                        {CV_DATA.location}
+                                    </div>
+                                </div>
+
+                                <div className="mt-8 pt-8 border-t border-[#30363d]">
+                                    <h4 className="text-xs font-bold uppercase tracking-wider text-[#8b949e] mb-4">Focus Areas</h4>
+                                    <div className="flex flex-wrap gap-2">
+                                        <span className="skill-badge">Python Ecosystem</span>
+                                        <span className="skill-badge">ERP Solutions</span>
+                                        <span className="skill-badge">RPA Automation</span>
+                                        <span className="skill-badge">API Architecture</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+
+                        {/* Main Content */}
+                        <main className="lg:col-span-8">
+                            
+                            {/* Experience Section */}
+                            <section className="mb-12">
+                                <SectionHeader icon="briefcase" title="Professional Experience" />
+                                <div className="mt-6">
+                                    {CV_DATA.experience.map((exp, i) => (
+                                        <ExperienceCard key={i} exp={exp} />
+                                    ))}
+                                </div>
+                            </section>
+
+                            {/* Skills Grid */}
+                            <section className="mb-12">
+                                <SectionHeader icon="cpu" title="Technical Skills" />
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                                    
+                                    <div className="glass-card p-4">
+                                        <div className="flex items-center gap-2 mb-3 text-[#58a6ff]">
+                                            <Icon name="code-2" className="w-4 h-4" />
+                                            <span className="text-sm font-bold">Languages & Frameworks</span>
+                                        </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {CV_DATA.skills.programming.map(s => <span key={s} className="skill-badge">{s}</span>)}
+                                        </div>
+                                    </div>
+
+                                    <div className="glass-card p-4">
+                                        <div className="flex items-center gap-2 mb-3 text-[#58a6ff]">
+                                            <Icon name="database" className="w-4 h-4" />
+                                            <span className="text-sm font-bold">Databases & Cloud</span>
+                                        </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {[...CV_DATA.skills.databases, ...CV_DATA.skills.cloud].map(s => <span key={s} className="skill-badge">{s}</span>)}
+                                        </div>
+                                    </div>
+
+                                    <div className="glass-card p-4">
+                                        <div className="flex items-center gap-2 mb-3 text-[#58a6ff]">
+                                            <Icon name="wrench" className="w-4 h-4" />
+                                            <span className="text-sm font-bold">Tools & Testing</span>
+                                        </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {CV_DATA.skills.tools.map(s => <span key={s} className="skill-badge">{s}</span>)}
+                                        </div>
+                                    </div>
+
+                                    <div className="glass-card p-4">
+                                        <div className="flex items-center gap-2 mb-3 text-[#58a6ff]">
+                                            <Icon name="layers" className="w-4 h-4" />
+                                            <span className="text-sm font-bold">Specialized</span>
+                                        </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {CV_DATA.skills.specialized.map(s => <span key={s} className="skill-badge">{s}</span>)}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </section>
+
+                            {/* Footer / CTA */}
+                            <footer className="mt-20 pt-8 border-t border-[#30363d] text-center">
+                                <p className="text-sm text-[#8b949e] mb-4">
+                                    Interested in working together?
+                                </p>
+                                <a 
+                                    href={`mailto:${CV_DATA.email}`}
+                                    className="inline-flex items-center gap-2 px-6 py-3 bg-[#238636] hover:bg-[#2ea043] text-white rounded-md font-semibold transition-colors"
+                                >
+                                    <Icon name="mail" className="w-4 h-4" />
+                                    Get in touch
+                                </a>
+                            </footer>
+
+                        </main>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 </html>
